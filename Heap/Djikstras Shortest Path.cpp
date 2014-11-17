@@ -26,7 +26,7 @@ int main(){
 		min = heap.Delete_Min();
 		pathFromStartToVertex[0] += min.id;
 		pathFromStartToVertex[min.id] = pathFromStartToVertex[0];
-
+		cvzxc
 		for (int i = 0; i < adjList[min.id].size(); i++){
 			if (adjList[min.id][i].id == 4) std::cout << "4 adjacent to vertex " << min.id << '\n';
 		}
