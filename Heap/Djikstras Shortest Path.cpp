@@ -13,7 +13,7 @@ const int START_VERTEX = 1;
 int main(){
 	//valid entries in adjList start from[1], not zero, so that vertex #1 is stored in [1].
 	std::vector<Edge> adjList[NUM_VERTICES + 1];
-	std::vector<int> shortestPaths(NUM_VERTICES + 1);
+	std::vector<int> shortestPaths(NUM_VERTICES + 1, 1000000);
 	std::vector<int> X;
 	std::vector<std::string> pathFromStartToVertex(NUM_VERTICES + 1);
 	//ReadFile(adjList, "dijkstraData.txt");
@@ -24,43 +24,42 @@ int main(){
 	pathFromStartToVertex[START_VERTEX] = START_VERTEX;
 	
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
-	for (int i = 0; i < NUM_VERTICES; i++){
+	for (int p = 1; p < NUM_VERTICES; p++){
 		//scan all edges protruding from the vertices in X
 		std::vector<Edge> crossEdges;
-		std::vector<int> crossEdgeTails;
-		for (int i = 0; i <X.size(); i++){
-
+		
+		int sizeX = X.size();//need this variable. If we say until i<X.size() we'll run more or less than we want since we resize X within the for loop.
+		for (int t = 0; t < sizeX; t++){
 			//If we find an edge with its head in V-X (V-X = unprocessed vectors. To determine if head is in X-Y, search X for the head.
 			//If not in X, it is in X-Y.
-			for (int q = 0; q < adjList[X[i]].size(); q++){
+			for (int q = 0; q < adjList[X[t]].size(); q++){
 
 				//record greedy score for edges that meet our criteria for as we find them
-				int head = adjList[X[i]][q].id;
-				if (Found_In_VX(head, X)){
-					adjList[X[i]][q].cost += shortestPaths[X[i]];
-					crossEdges.push_back(adjList[X[i]][q]);
-					crossEdgeTails.push_back(X[i]);
+				int head = adjList[X[t]][q].id;
+				//if head is in VX and the previous cost to head is > the shortest path to X[t] + the edge from X[t] to head
+				if (Found_In_VX(head, X) && shortestPaths[head] > shortestPaths[X[t]] + adjList[X[t]][q].cost){
+						shortestPaths[head] = shortestPaths[X[t]] + adjList[X[t]][q].cost;//our current best guess
+						crossEdges.push_back(adjList[X[t]][q]);
+
+						//record the path we used to get to the vertex we just reached (B[vert we've reached] = B[edge tail] + head.
+						std::stringstream ss;
+						ss << pathFromStartToVertex[X[t]] << " " << head;
+						pathFromStartToVertex[head] = ss.str();
 				}
-
 			}
-
-			//of the edges we've just found, determine the one with the smallest greedy score. Add its head to X (set S[vert we just added]= GC).
-			Edge smallest=crossEdges[0];
-			int tail;
-			for (int k = 1; k < crossEdges.size(); k++){
-				if (smallest.cost> crossEdges[k].cost) smallest = crossEdges[k];
-				tail = k;
-			}
-
-			//record the path we used to get to the vertex we just added to X (B[vert we just added] = B[edge tail] + head.
-
-			std::stringstream ss;
-			ss << pathFromStartToVertex[crossEdgeTails[tail]] << smallest.id;
-			
-			X.push_back(smallest.id);
-			shortestPaths[smallest.id] = smallest.cost;
-			pathFromStartToVertex[smallest.id] = ss.str();
 		}
+		//of the edges we've just found, determine the one with the smallest greedy score. Add its head to X (set S[vert we just added]= GC).
+		if (crossEdges.size() != 0){
+			Edge smallest = crossEdges[0];
+			for (int k = 1; k < crossEdges.size(); k++){
+				if (smallest.cost > crossEdges[k].cost){
+					smallest = crossEdges[k];
+				}
+			}
+			X.push_back(smallest.id);
+	
+		}
+		
 	}
 	//std::cout << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
 	//std::cout << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
