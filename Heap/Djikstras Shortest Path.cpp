@@ -9,11 +9,12 @@
 void ReadFile(std::vector<Edge> adjList[], std::string fileName);
 bool Found_In_VX(int vertexID, const std::vector<int>& X);
 const int NUM_VERTICES = 200;
-const int START_VERTEX = 1;
+const int START_VERTEX = 29;
 int main(){
 	//valid entries in adjList start from[1], not zero, so that vertex #1 is stored in [1].
 	std::vector<Edge> adjList[NUM_VERTICES + 1];
 	std::vector<int> shortestPaths(NUM_VERTICES + 1, 1000000);
+	std::vector<std::string> popOrder;
 	std::vector<int> X;
 	std::vector<std::string> pathFromStartToVertex(NUM_VERTICES + 1);
 	ReadFile(adjList, "dijkstraData.txt");
@@ -21,7 +22,10 @@ int main(){
 	
 	X.push_back(START_VERTEX);
 	shortestPaths[START_VERTEX] = 0;
-	pathFromStartToVertex[START_VERTEX] = START_VERTEX;
+	std::stringstream ss;
+	ss << START_VERTEX;
+	pathFromStartToVertex[START_VERTEX] = ss.str();
+	popOrder.push_back(ss.str());
 	
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
 	for (int p = 1; p < NUM_VERTICES; p++){
@@ -59,6 +63,9 @@ int main(){
 				}
 			}
 			X.push_back(smallest.id);
+			std::stringstream ss;
+			ss << " " << smallest.id;
+			popOrder[0] += (ss.str());
 		}
 	}
 
