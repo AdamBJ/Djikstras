@@ -61,18 +61,18 @@ Heap::~Heap(){
 
 void Heap::InitializeForDjikstras(){
 	int numberVertices = heap.capacity();
-	HeapEntry t(1, 0);
-	heap.push_back(t);
-	for (int i = 2; i <= numberVertices; i++){
+	//HeapEntry t(1, 0);
+	//heap.push_back(t);
+	for (int i = 1; i <= numberVertices; i++){
 		//insert all but the first node with a key of "+infinity"
 		HeapEntry t(i, 1000000);
 		heap.push_back(t);
 	}
 	//start test
-	//HeapEntry q(1, 999999);
-	//heap[28] = q;
-	//HeapEntry r(29, 0);
-	//heap[0] = r;
+	HeapEntry q(1, 999999);
+	heap[28] = q;
+	HeapEntry r(29, 0);
+	heap[0] = r;
 	//end test
 
 	rear = numberVertices;

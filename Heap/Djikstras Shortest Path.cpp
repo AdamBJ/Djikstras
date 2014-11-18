@@ -6,14 +6,15 @@
 #include <iostream>
 
 void ReadFile(std::vector<Edge> adjList[], std::string fileName);
-const int NUM_VERTICES = 4;
+const int NUM_VERTICES = 200;
+const int START_VERTEX = 29;
 int main(){
 	//valid entries in adjList start from[1], not zero, so that vertex #1 is stored in [1].
 	std::vector<Edge> adjList[NUM_VERTICES + 1];
 	std::vector<int> shortestPaths(NUM_VERTICES + 1);
 	std::vector<std::string> pathFromStartToVertex(NUM_VERTICES + 1);
-	//ReadFile(adjList, "dijkstraData.txt");
-	ReadFile(adjList, "test.txt");
+	ReadFile(adjList, "dijkstraData.txt");
+	//ReadFile(adjList, "test.txt");
 	Heap heap(NUM_VERTICES);
 	heap.InitializeForDjikstras(); 
 
@@ -22,12 +23,16 @@ int main(){
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
 	for (int i = 0; i < NUM_VERTICES; i++){
 		HeapEntry p(0, 0);
+		//there is no prevMin if we're processing node 1
+		if (i == 0){
+			std::stringstream ss;
+			ss << START_VERTEX;
+			pathFromStartToVertex[START_VERTEX] = ss.str();
+		}
 		min = heap.Delete_Min();
-		pathFromStartToVertex[0] += min.id;
-		pathFromStartToVertex[min.id] = pathFromStartToVertex[0];
-
+		
 		shortestPaths[min.id] = min.key;
-		//recalculate keys of any nodes that now have edges cross the boundary between X(processed) and V-X(unprocessed)
+		//recalculate keys of any nodes that now have edges crossing the boundary between X(processed) and V-X(unprocessed)
 		for (int q = 0; q < adjList[min.id].size(); q++){
 			int headID = adjList[min.id][q].id;
 			int costToHead = adjList[min.id][q].cost;
@@ -35,16 +40,20 @@ int main(){
 			if (head.id != -1){//if delete was successful
 				if (head.key > shortestPaths[min.id] + costToHead) {
 					head.key = shortestPaths[min.id] + costToHead;
+					std::stringstream ss;
+					ss << pathFromStartToVertex[min.id] << " " << head.id;
+					pathFromStartToVertex[head.id] = ss.str();
+					
 				}
 				heap.Insert(head);
 			}
 		}
 	}
-	std::ofstream outf("heaprslt.txt");
-	outf << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
-	outf << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
-	outf << "," << shortestPaths[165] << "," << shortestPaths[188] << "," << shortestPaths[197];
-	return 0;
+	//std::ofstream outf("heaprslt.txt");
+	//outf << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
+	//outf << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
+	//outf << "," << shortestPaths[165] << "," << shortestPaths[188] << "," << shortestPaths[197];
+
 	return 0;
 }
 
