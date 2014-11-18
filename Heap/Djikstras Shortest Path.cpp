@@ -22,14 +22,9 @@ int main(){
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
 	for (int i = 0; i < NUM_VERTICES; i++){
 		HeapEntry p(0, 0);
-		p = heap.Get_Node(4);
 		min = heap.Delete_Min();
 		pathFromStartToVertex[0] += min.id;
 		pathFromStartToVertex[min.id] = pathFromStartToVertex[0];
-
-		for (int i = 0; i < adjList[min.id].size(); i++){
-			if (adjList[min.id][i].id == 4) std::cout << "4 adjacent to vertex " << min.id << '\n';
-		}
 
 		shortestPaths[min.id] = min.key;
 		//recalculate keys of any nodes that now have edges cross the boundary between X(processed) and V-X(unprocessed)
@@ -45,9 +40,11 @@ int main(){
 			}
 		}
 	}
-	//std::cout << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
-	//std::cout << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
-	//std::cout << "," << shortestPaths[165] << "," << shortestPaths[188] << "," << shortestPaths[197];
+	std::ofstream outf("heaprslt.txt");
+	outf << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
+	outf << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
+	outf << "," << shortestPaths[165] << "," << shortestPaths[188] << "," << shortestPaths[197];
+	return 0;
 	return 0;
 }
 
