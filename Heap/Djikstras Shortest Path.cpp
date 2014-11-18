@@ -21,6 +21,9 @@ int main(){
 
 	HeapEntry min(0, 0);
 
+	std::stringstream ss;
+	ss << START_VERTEX;
+
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
 	for (int i = 0; i < NUM_VERTICES; i++){
 		HeapEntry p(0, 0);
@@ -29,12 +32,14 @@ int main(){
 			std::stringstream ss;
 			ss << START_VERTEX;
 			pathFromStartToVertex[START_VERTEX] = ss.str();
+			popOrder.push_back(ss.str());
 		}
-		min = heap.Delete_Min();
-		std::stringstream ss;
-		ss << " " << min.id;
-		popOrder[0] += (ss.str());
-		
+		if (i != 0){
+			min = heap.Delete_Min();
+			std::stringstream ss;
+			ss << " " << min.id;
+			popOrder[0] += (ss.str());
+		}
 		shortestPaths[min.id] = min.key;
 		//recalculate keys of any nodes that now have edges crossing the boundary between X(processed) and V-X(unprocessed)
 		for (int q = 0; q < adjList[min.id].size(); q++){
