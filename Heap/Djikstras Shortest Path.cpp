@@ -13,6 +13,7 @@ int main(){
 	std::vector<Edge> adjList[NUM_VERTICES + 1];
 	std::vector<int> shortestPaths(NUM_VERTICES + 1);
 	std::vector<std::string> pathFromStartToVertex(NUM_VERTICES + 1);
+	std::vector<std::string> popOrder;
 	ReadFile(adjList, "dijkstraData.txt");
 	//ReadFile(adjList, "test.txt");
 	Heap heap(NUM_VERTICES);
@@ -30,6 +31,9 @@ int main(){
 			pathFromStartToVertex[START_VERTEX] = ss.str();
 		}
 		min = heap.Delete_Min();
+		std::stringstream ss;
+		ss << " " << min.id;
+		popOrder[0] += (ss.str());
 		
 		shortestPaths[min.id] = min.key;
 		//recalculate keys of any nodes that now have edges crossing the boundary between X(processed) and V-X(unprocessed)
