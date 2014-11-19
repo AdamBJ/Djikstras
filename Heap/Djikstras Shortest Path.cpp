@@ -8,12 +8,14 @@
 void ReadFile(std::vector<Edge> adjList[], std::string fileName);
 const int NUM_VERTICES = 200;
 const int START_VERTEX = 29;
+
 int main(){
-	//valid entries in adjList start from[1], not zero, so that vertex #1 is stored in [1].
+	//valid entries in adjList start from[1] so that vertex #1 is stored in [1].
 	std::vector<Edge> adjList[NUM_VERTICES + 1];
 	std::vector<int> shortestPaths(NUM_VERTICES + 1);
 	std::vector<std::string> pathFromStartToVertex(NUM_VERTICES + 1);
 	std::vector<std::string> popOrder;
+	std::vector<std::string> popScore;
 	ReadFile(adjList, "dijkstraData.txt");
 	//ReadFile(adjList, "test.txt");
 	Heap heap(NUM_VERTICES);
@@ -21,43 +23,47 @@ int main(){
 
 	HeapEntry min(0, 0);
 
-	std::stringstream ss;
-	ss << START_VERTEX;
-
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
 	for (int i = 0; i < NUM_VERTICES; i++){
-		HeapEntry p(0, 0);
-		//there is no prevMin if we're processing node 1
+		
 		if (i == 0){
+			min = heap.Delete_Min();
 			std::stringstream ss;
 			ss << START_VERTEX;
 			pathFromStartToVertex[START_VERTEX] = ss.str();
 			popOrder.push_back(ss.str());
+			popScore.push_back("0");
 		}
 		if (i != 0){
 			min = heap.Delete_Min();
 			std::stringstream ss;
 			ss << " " << min.id;
 			popOrder[0] += (ss.str());
+			std::stringstream st;
+			st << " " << min.key;
+			popScore[0] += st.str();
+
 		}
+
 		shortestPaths[min.id] = min.key;
+
 		//recalculate keys of any nodes that now have edges crossing the boundary between X(processed) and V-X(unprocessed)
 		for (int q = 0; q < adjList[min.id].size(); q++){
 			int headID = adjList[min.id][q].id;
 			int costToHead = adjList[min.id][q].cost;
 			HeapEntry head = heap.Delete(headID);
-			if (head.id != -1){//if delete was successful
-				if (head.key > shortestPaths[min.id] + costToHead) {
-					head.key = shortestPaths[min.id] + costToHead;
-					std::stringstream ss;
-					ss << pathFromStartToVertex[min.id] << " " << head.id;
-					pathFromStartToVertex[head.id] = ss.str();
-					
-				}
-				heap.Insert(head);
+			
+			if (head.key > shortestPaths[min.id] + costToHead) {
+				head.key = shortestPaths[min.id] + costToHead;
+				
+				std::stringstream ss;
+				ss << pathFromStartToVertex[min.id] << " " << head.id;
+				pathFromStartToVertex[head.id] = ss.str();	
 			}
+			if (head.id!=-1) heap.Insert(head);
 		}
 	}
+
 	//std::ofstream outf("heaprslt.txt");
 	//outf << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
 	//outf << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
