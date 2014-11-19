@@ -17,6 +17,7 @@ int main(){
 	std::vector<std::string> popOrder;
 	std::vector<int> X;
 	std::vector<std::string> pathFromStartToVertex(NUM_VERTICES + 1);
+	std::vector<std::string> popScore;
 	ReadFile(adjList, "dijkstraData.txt");
 	//ReadFile(adjList, "test.txt");
 	
@@ -26,7 +27,8 @@ int main(){
 	ss << START_VERTEX;
 	pathFromStartToVertex[START_VERTEX] = ss.str();
 	popOrder.push_back(ss.str());
-	
+	popScore.push_back("0");
+
 	//for each of the remaining vertices, process using Djikstra's greedy selection rule
 	for (int p = 1; p < NUM_VERTICES; p++){
 		//scan all edges protruding from the vertices in X
@@ -66,6 +68,10 @@ int main(){
 			std::stringstream ss;
 			ss << " " << smallest.id;
 			popOrder[0] += (ss.str());
+			ss.str(std::string());
+			ss.clear();
+			ss << " " << smallest.cost;
+			popScore[0] += ss.str();
 		}
 	}
 
