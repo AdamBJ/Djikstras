@@ -83,6 +83,7 @@
     <ClInclude Include="Heap.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\..\..\..\Desktop\heap.txt" />
     <Text Include="..\dijkstraData.txt" />
     <Text Include="..\test.txt" />
   </ItemGroup>

@@ -61,18 +61,18 @@ Heap::~Heap(){
 
 void Heap::InitializeForDjikstras(){
 	int numberVertices = heap.capacity();
-	//HeapEntry t(1, 0);
-	//heap.push_back(t);
+	HeapEntry t(1, 0);
+	heap.push_back(t);
 	for (int i = 1; i <= numberVertices; i++){
 		//insert all but the first node with a key of "+infinity"
 		HeapEntry t(i, 1000000);
 		heap.push_back(t);
 	}
 	//start test
-	HeapEntry q(1, 999999);
+	/*HeapEntry q(1, 999999);
 	heap[28] = q;
 	HeapEntry r(29, 0);
-	heap[0] = r;
+	heap[0] = r;*/
 	//end test
 
 	rear = numberVertices;
@@ -177,7 +177,6 @@ HeapEntry Heap::Delete_Min(){
 		if (childIndex < rear){
 			if (heap[parentIndex].key > heap[childIndex].key){
 				Swap(heap[parentIndex], heap[childIndex]);
-				parentIndex = childIndex;
 				//RECURSE
 				Bubble_Down_Recursivley(childIndex);
 				
@@ -198,7 +197,6 @@ void Heap::Bubble_Down_Recursivley(int parentIndex){
 		if (childIndex < rear){//this is the de-facto basecase
 			if (heap[parentIndex].key > heap[childIndex].key){
 				Swap(heap[parentIndex], heap[childIndex]);
-				parentIndex = childIndex;
 				//RECURSE
 				Bubble_Down_Recursivley(childIndex);
 

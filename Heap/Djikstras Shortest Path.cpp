@@ -7,7 +7,7 @@
 
 void ReadFile(std::vector<Edge> adjList[], std::string fileName);
 const int NUM_VERTICES = 200;
-const int START_VERTEX = 29;
+const int START_VERTEX = 1;
 
 int main(){
 	//valid entries in adjList start from[1] so that vertex #1 is stored in [1].
@@ -64,10 +64,10 @@ int main(){
 		}
 	}
 
-	//std::ofstream outf("heaprslt.txt");
-	//outf << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
-	//outf << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
-	//outf << "," << shortestPaths[165] << "," << shortestPaths[188] << "," << shortestPaths[197];
+	std::ofstream outf("heaprslt.txt");
+	outf << shortestPaths[7] << "," << shortestPaths[37] << "," << shortestPaths[59] << "," << shortestPaths[82];
+	outf << "," << shortestPaths[99] << "," << shortestPaths[115] << "," << shortestPaths[133];
+	outf << "," << shortestPaths[165] << "," << shortestPaths[188] << "," << shortestPaths[197];
 
 	return 0;
 }
